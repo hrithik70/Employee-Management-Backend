@@ -20,4 +20,18 @@ public class UserService {
         List<UserDO> userList = (List<UserDO>) userRepository.findAll();
         return userList;
     }
+
+    public String deleteUser(Long id) {
+        List<UserDO> userList = (List<UserDO>) userRepository.findAll();
+        for (int i = 0; i < userList.size(); i++) {
+            UserDO user = userList.get(i);
+            if(user.getId() == id)
+            {
+                userRepository.deleteById(id);
+                return "Delete "+ id + " is Successfully..";
+            }
+
+        }
+        return id + " is not Present";
+    }
 }

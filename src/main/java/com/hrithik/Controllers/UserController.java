@@ -26,4 +26,10 @@ public class UserController {
         return  userService.getAlluser();
     }
 
+    @PostMapping("delete/{id}")
+    public String deleteUser(@PathVariable Long id)
+    {
+        return  userService.deleteUser(id);
+    }
+
 }
