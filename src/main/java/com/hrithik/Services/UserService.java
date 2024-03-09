@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -22,16 +23,39 @@ public class UserService {
     }
 
     public String deleteUser(Long id) {
-        List<UserDO> userList = (List<UserDO>) userRepository.findAll();
-        for (int i = 0; i < userList.size(); i++) {
-            UserDO user = userList.get(i);
-            if(user.getId() == id)
-            {
-                userRepository.deleteById(id);
-                return "Delete "+ id + " is Successfully..";
-            }
-
+        Optional<UserDO> user = userRepository.findById(id);
+        if(user.isPresent())
+        {
+            UserDO deleteUser = user.get();
+            userRepository.deleteById(id);
+            return id + " is deleted Successfully";
         }
+
         return id + " is not Present";
+    }
+
+    public UserDO updateUser(UserDO userDO, Long userId) {
+        Optional<UserDO> user = userRepository.findById(userId);
+        if(user.isPresent())
+        {
+            UserDO userUpdate = userDO;
+            userUpdate.setId(userId);
+            userUpdate.setFullName(userDO.getFullName());
+            userUpdate.setGender(userDO.getGender());
+            userUpdate.setEmail(userDO.getEmail());
+            userUpdate.setMobileNo(userDO.getMobileNo());
+            userRepository.save(userUpdate);
+            return userUpdate;
+        }
+        return (UserDO) userDO;
+    }
+
+    public UserDO getUserById(Long userId) {
+        Optional<UserDO> fetchUser = userRepository.findById(userId);
+       if(fetchUser.isPresent())
+       {
+           return (UserDO) fetchUser.get();
+       }
+       return null;
     }
 }
